@@ -8,6 +8,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using laba5_prg.Properties;
 
 namespace laba5_prg
 {
@@ -17,6 +18,13 @@ namespace laba5_prg
         public MainForm()
         {
             InitializeComponent();
+            this.lstbRegex.Items.Add(@"\b(([А-Я])[а-я]+)\?");
+            this.lstbRegex.Items.Add(@"\s(и...)\s");
+            this.lstbRegex.Click += (s, e) =>
+            {
+                this.txtbFindString.Text = lstbRegex.Text;
+                Find(s, e);
+            };
         }
 
         private void OpenFile(object sender, EventArgs e)
@@ -55,6 +63,11 @@ namespace laba5_prg
 
                 rtbSearchResult.Text = $"Найдено[{m.Index}]: ##{m.Value}##\n";
 
+                for (int i = 0; i < m.Groups.Count; i++)
+                {
+                    rtbSearchResult.Text += String.Format("Groups[{0}]={1}\n", i, m.Groups[i]);
+                }
+
             }
         }
 
@@ -76,6 +89,19 @@ namespace laba5_prg
                 Find(sender, e);
                 e.SuppressKeyPress = true; // дальше событие нажатие кнопки игнорируется
             }
+        }
+
+        private void SaveSettings(object sender, FormClosingEventArgs e)
+        {
+            Settings.Default.FileName = data.FileName;
+            Settings.Default.Save();
+        }
+
+        private void LoadSettings(object sender, EventArgs e)
+        {
+            data.ReadFromFile(Settings.Default.FileName);
+            Console.WriteLine($"File is open: {data.FileName}");
+            rtbFileText.Text = data.Text;
         }
     }
 }

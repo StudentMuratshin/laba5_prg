@@ -16,14 +16,25 @@ namespace laba5_prg
 
         internal void ReadFromFile(string fileName)
         {
+            if (fileName == "") 
+            {
+                Console.WriteLine("Попытка открытия файла без задания имени");
+                return;
+            }
             using (StreamReader sr = new StreamReader(fileName))
             {
-                this.Text = sr.ReadToEnd().Replace("\r", "");  //стандартный символ конца строки	
+                this.Text = sr.ReadToEnd().Replace("\r", "");  //стандартный символ конца строки
+                this.FileName = fileName;	
             }
         }
 
         internal void Find(string re)
         {
+            if (this.Text == null)
+            {
+                Console.WriteLine("Попытка поиска без открытя файла");
+                return;
+            }
             this.Match = Regex.Match(this.Text, re);
         }
 
