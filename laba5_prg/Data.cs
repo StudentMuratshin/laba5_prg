@@ -26,5 +26,10 @@ namespace laba5_prg
         {
             this.Match = Regex.Match(this.Text, re);
         }
+
+        internal void Next()
+        {
+            Match = Match?.NextMatch();
+        }
     }
 }

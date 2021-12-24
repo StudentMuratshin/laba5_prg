@@ -57,5 +57,25 @@ namespace laba5_prg
 
             }
         }
+
+        private void rtbFileText_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void NextMatch(object sender, EventArgs e)
+        {
+            data.Next();
+            this.ShowMatch();
+        }
+
+        private void DownAnyKey(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                Find(sender, e);
+                e.SuppressKeyPress = true; // дальше событие нажатие кнопки игнорируется
+            }
+        }
     }
 }
