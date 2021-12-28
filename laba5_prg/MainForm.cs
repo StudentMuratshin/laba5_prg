@@ -20,6 +20,17 @@ namespace laba5_prg
             InitializeComponent();
             this.lstbRegex.Items.Add(@"\b(([А-Я])[а-я]+)\?");
             this.lstbRegex.Items.Add(@"\s(и...)\s");
+            this.lstbRegex.Items.Add(@"\b\d{4}\b");
+            this.lstbRegex.Items.Add(@"\bо[а-я]+");
+            this.lstbRegex.Items.Add(@"\bо[а-я]{5,}");
+            this.lstbRegex.Items.Add(@"\bо\S+");
+            this.lstbRegex.Items.Add(@"\b\S*на\b");
+            this.lstbRegex.Items.Add(@"\b[а-я]*(ить|ать)\b");
+            this.lstbRegex.Items.Add(@"[А-Я].*[.!?]+");
+            this.lstbRegex.Items.Add(@"\b[ф-я].*?\b");
+            this.lstbRegex.Items.Add(@"\b(\S)\S+(\S)\b");
+            this.lstbRegex.Items.Add(@"([LMXIV]+)\b");
+            this.lstbRegex.Items.Add(@"\b(of|or)\b");
             this.lstbRegex.Click += (s, e) =>
             {
                 this.txtbFindString.Text = lstbRegex.Text;
@@ -43,8 +54,27 @@ namespace laba5_prg
 
         private void Find(object sender, EventArgs e)
         {
-            data.Find(txtbFindString.Text);
-            this.ShowMatch();
+            if (txtbFindString.Text == "")
+            {
+                List<String> pname = data.FindPersName(textBox1.Text);
+                for (int i = 0; i < pname.Count; i++)
+                {
+                    if (i == 0)
+                    {
+                        rtbSearchResult.Text = rtbSearchResult.Text + pname[i];
+                    }
+                    else
+                    {
+                        rtbSearchResult.Text = rtbSearchResult.Text + ", " + pname[i];
+                    }
+
+                }
+            }
+            else
+            {
+                data.Find(txtbFindString.Text);
+                this.ShowMatch();
+            }
         }
 
         private void ShowMatch()
@@ -102,6 +132,29 @@ namespace laba5_prg
             data.ReadFromFile(Settings.Default.FileName);
             Console.WriteLine($"File is open: {data.FileName}");
             rtbFileText.Text = data.Text;
+        }
+
+        private void OfOrClick(object sender, EventArgs e)
+        {
+            int ofc, orc;
+            data.GetOfOrStatistics(out ofc, out orc);
+            rtbSearchResult.Text = $" of: {ofc}, or: {orc}";
+        }
+
+        private void FindSentencesFirstWords(object sender, EventArgs e)
+        {
+            ISet<String> words = data.FindSentencesFirstWords();
+            rtbSearchResult.Text = String.Join(", ", words);
+        }
+
+        private void FirstLetterCounts(object sender, EventArgs e)
+        {
+            new StatisticsForm(data.FirstLetterCounts()).Show();
+        }
+
+        private void Name_pers(object sender, EventArgs e)
+        {
+
         }
     }
 }
